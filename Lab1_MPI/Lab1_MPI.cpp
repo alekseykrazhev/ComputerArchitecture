@@ -12,36 +12,33 @@ public:
 		srand(time(0));
 		auto process = MPI::Process();
 
-		int* data1 = nullptr;
-		int* data2 = nullptr;
-		int* answer = nullptr;
-
-		// Vector length
-		int DATALENGTH;
+		int vector_length;
 		std::cout << "Input vector length:\n";
-		std::cin >> DATALENGTH;
+		std::cin >> vector_length;
+
+		int* vec1 = new int[vector_length];
+		int* vec2 = new int[vector_length];
+		int* answer = nullptr;
 
 		if (process.IsMaster())
 		{
-			data1 = new int[DATALENGTH];
-			data2 = new int[DATALENGTH];
 			answer = new int[process.GetProcessCount()];
 
 			//Fill first matrix
-			fill(data1, DATALENGTH);
+			fill(vec1, vector_length);
 			std::cout << "First:  ";
-			for (int i = 0; i < DATALENGTH; i++)
+			for (int i = 0; i < vector_length; i++)
 			{
-				std::cout << data1[i] << " ";
+				std::cout << vec1[i] << " ";
 			}
 			std::cout << std::endl;
 
 			//Fill second matrix
-			fill(data2, DATALENGTH);
+			fill(vec2, vector_length);
 			std::cout << "Second: ";
-			for (int i = 0; i < DATALENGTH; i++)
+			for (int i = 0; i < vector_length; i++)
 			{
-				std::cout << data2[i] << " ";
+				std::cout << vec2[i] << " ";
 			}
 			std::cout << std::endl;
 		}
@@ -49,15 +46,15 @@ public:
 		int* sizes = new int[process.GetProcessCount()];
 		int* displs = new int[process.GetProcessCount()];
 
-		fill_sizes(sizes, process.GetProcessCount(), DATALENGTH, displs);
+		fill_sizes(sizes, process.GetProcessCount(), vector_length, displs);
 
 		int processCount = process.GetProcessCount();
-		const int MAX_SIZE = (DATALENGTH + processCount - 1) / processCount;
+		const int MAX_SIZE = (vector_length + processCount - 1) / processCount;
 		int* slice1 = new int[MAX_SIZE];
 		int* slice2 = new int[MAX_SIZE];
 
-		MPI_Scatterv(data1, sizes, displs, MPI_INT, slice1, sizes[process.GetRank()], MPI_INT, 0, MPI_COMM_WORLD);
-		MPI_Scatterv(data2, sizes, displs, MPI_INT, slice2, sizes[process.GetRank()], MPI_INT, 0, MPI_COMM_WORLD);
+		MPI_Scatterv(vec1, sizes, displs, MPI_INT, slice1, sizes[process.GetRank()], MPI_INT, 0, MPI_COMM_WORLD);
+		MPI_Scatterv(vec2, sizes, displs, MPI_INT, slice2, sizes[process.GetRank()], MPI_INT, 0, MPI_COMM_WORLD);
 
 		int sum = 0;
 		for (int i = 0; i < sizes[process.GetRank()]; i++)
@@ -91,8 +88,8 @@ public:
 			std::cout << "Scalar multiplication = " << answer_sum << std::endl;
 
 
-			delete[] data1;
-			delete[] data2;
+			delete[] vec1;
+			delete[] vec2;
 			delete[] answer;
 		}
 

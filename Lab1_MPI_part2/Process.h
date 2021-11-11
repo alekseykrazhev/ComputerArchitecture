@@ -1,18 +1,18 @@
 #pragma once
 
-#include <queue>
-
 namespace MPI
 {
 	const int MasterRank = 0;
 
 	class Process
 	{
-	private:
 		int _processCount;
 		int _rank;
 
+
+
 	public:
+
 		Process();
 		~Process();
 
