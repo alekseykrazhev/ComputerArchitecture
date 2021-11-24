@@ -206,9 +206,10 @@ int main(int argc, char* argv[])
 
 	if (rank == 0)
 	{
-		//std::cout << "\nTime: " << MPI_Wtime() - timestart << "\n";
 		std::cout << "\nResult:\n";
 		printMatrix(answer, K, M);
+		std::cout << '\n';
+		std::cout << "\nTime: " << MPI_Wtime() - timestart << "\n";
 	}
 	MPI_Finalize();
 	
