@@ -6,32 +6,11 @@
 #include <numeric>
 #include <mpi.h>
 
-std::vector<int> get_sizes(int vectors_length, int processes_count) {
-    int process_size = vectors_length / processes_count;
-    int i = vectors_length % processes_count;
-    std::vector<int> sizes(processes_count, process_size);
-    std::fill(sizes.end() - i, sizes.end(), process_size + 1);
+std::vector<int> get_sizes(int vectors_length, int processes_count); // размеры буферов
 
-    return sizes;
-}
+std::vector<int> get_displacements(const std::vector<int>& sizes); // место 1го элемента в i - том буфере
 
-std::vector<int> get_displacements(const std::vector<int>& sizes) {
-    std::vector<int> displ(sizes.size());
-    for (int i = 1; i < displ.size(); ++i) {
-        displ[i] = displ[i - 1] + sizes[i - 1];
-    }
-
-    return displ;
-}
-
-int scalar_product(const std::vector<int>& v1, const std::vector<int>& v2) {
-    int result = 0;
-    for (int i = 0; i < v1.size(); ++i) {
-        result += v1[i] * v2[i];
-    }
-
-    return result;
-}
+int scalar_product(const std::vector<int>& v1, const std::vector<int>& v2);
 
 int main(int argc, char* argv[]) {
     int processes_count;
@@ -91,4 +70,31 @@ int main(int argc, char* argv[]) {
     MPI_Finalize();
 
     return 0;
+}
+
+std::vector<int> get_sizes(int vectors_length, int processes_count) {
+    int process_size = vectors_length / processes_count;
+    int i = vectors_length % processes_count;
+    std::vector<int> sizes(processes_count, process_size);
+    std::fill(sizes.end() - i, sizes.end(), process_size + 1);
+
+    return sizes;
+}
+
+std::vector<int> get_displacements(const std::vector<int>& sizes) { 
+    std::vector<int> displ(sizes.size());
+    for (int i = 1; i < displ.size(); ++i) {
+        displ[i] = displ[i - 1] + sizes[i - 1];
+    }
+
+    return displ;
+}
+
+int scalar_product(const std::vector<int>& v1, const std::vector<int>& v2) {
+    int result = 0;
+    for (int i = 0; i < v1.size(); ++i) {
+        result += v1[i] * v2[i];
+    }
+
+    return result;
 }
