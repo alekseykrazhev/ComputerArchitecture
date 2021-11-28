@@ -134,6 +134,7 @@ int main(int argc, char* argv[])
 	}
 
 	MPI_Bcast(&K, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+	MPI_Bcast(&L, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 	MPI_Bcast(&M, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
 	double* firstMatrix = nullptr, * secondMatrix = nullptr,
