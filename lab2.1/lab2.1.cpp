@@ -5,26 +5,30 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 #define M_PI 3.14159265358979323846
+
 using namespace std;
+
 double f(double x) {
-    return sin(x) - x;
+    return pow(x, 3); 
 }
+
 double secondDerivative(double x, double _x, double x_, double h) {
     return (f(_x) - 2 * f(x) + f(x_)) / pow(h, 2);
 }
+
 double accurateFunc(double x) {
-    return -1 * sin(x);
+    return 6 * x;
 }
 
 int main(int argc, char* argv[]) {
     const int ThreadsCount = 5;
 
-    const double a = -1 * M_PI / 2;
-    const double b = M_PI / 2;
-    cout << "Enter N, please." << endl;
+    const double a = -1;
+    const double b = 3;
     int N;
-    cin >> N;
+    N = atoi(argv[1]);
     N++;
+    cout << N << endl;
 
     double max = -1.;
     double point = a;
